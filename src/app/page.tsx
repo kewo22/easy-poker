@@ -4,9 +4,27 @@ import Image from "next/image";
 import { title } from "process";
 import { useState } from "react";
 
+enum PlayerTitle {
+  D = 'Delar',
+  SM = 'Small Blind',
+  BB = 'Big Bline'
+}
+
+interface Game {
+  delar: Player | null,
+  sm: Player | null,
+  bb: Player | null,
+}
+
+interface Player {
+  id: number,
+  name: string,
+  pot: number,
+}
+
 export default function Home() {
 
-  const [player, setPlayer] = useState([
+  const [player, setPlayer] = useState<Player[]>([
     {
       id: 0,
       name: 'Kewin',
@@ -24,29 +42,47 @@ export default function Home() {
     },
     {
       id: 3,
+      name: 'Max',
+      pot: 1000
+    },
+    {
+      id: 4,
+      name: 'Ham',
+      pot: 1000
+    },
+    {
+      id: 5,
       name: 'Thanu',
       pot: 1000
     }
   ]);
 
-  const [game, setGame] = useState({
-    delar: player[0],
-    sm: player[1],
-    bb: player[2],
+  const [game, setGame] = useState<Game>({
+    delar: null,
+    sm: null,
+    bb: null,
   });
 
-  const title = (player: any) => {
-    if (game.bb.id === player.id) return 'BB'
-    if (game.sm.id === player.id) return 'SM'
-    if (game.delar.id === player.id) return 'Delar'
+
+  // SHOULD RUN AUTOMATICALLY
+  const onStartGameClick = () => {
+    setGame({
+      delar: player[0],
+      sm: player[1],
+      bb: player[2],
+    })
   }
 
   return (
     <main className="">
+      <button onClick={onStartGameClick}>Start</button>
       {player.map(p => {
         return <>
           <div>
-            {title(p) || 'Player'} - {p.name} - {p.pot}
+            {p.name} - {p.pot} 
+            <button className="bg-green-900 px-3 py-1 rounded">Call/Bet/Raise</button>
+            <button className="bg-green-900 px-3 py-1 rounded">Check</button>
+            <button className="bg-green-900 px-3 py-1 rounded">Fold</button>
           </div>
         </>
       })}
